@@ -8,6 +8,7 @@ export class GeoController {
 
   @Post()
   async handleGPSData(@Body() dto: LocationDto) {
-    return await this.geoService.processLocation(dto);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return await this.geoService.processGps(dto);
   }
 }

@@ -13,22 +13,16 @@ spec:
         app: geo-service
     spec:
       containers:
-        - name: geo
+        - name: geo-service
           image: geo-service:latest
           ports:
             - containerPort: 3001
           env:
             - name: REDIS_URL
               value: redis://redis:6379
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: geo-service
-spec:
-  selector:
-    app: geo-service
-  ports:
-    - port: 3001
-      targetPort: 3001
+            - name: REDIS_TTL_SECONDS
+              value: '300'
+            - name: ROUTING_SERVICE_URL
+              value: http://routing-service:3002
+            - name: AUDIT_SERVICE_URL
+              value: http://audit-service:3003

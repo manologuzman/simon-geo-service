@@ -3,6 +3,9 @@ import Redis from 'ioredis';
 
 @Injectable()
 export class RedisService implements OnModuleDestroy {
+  setJson(key: string, arg1: { deviceId: string; lat: number; lng: number; timestamp: number; }, ttl: number) {
+    throw new Error('Method not implemented.');
+  }
   private client: Redis;
 
   constructor() {

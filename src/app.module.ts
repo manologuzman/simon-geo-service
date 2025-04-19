@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
 import { GeoService } from './geo/geo.service';
 import { GeoController } from './geo/geo.controller';
+import { RoutingServiceClient } from './common/http/routing.service';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { GeoController } from './geo/geo.controller';
     HttpModule,
   ],
   controllers: [GeoController],
-  providers: [GeoService],
+  providers: [GeoService, RoutingServiceClient],
+  exports: [RoutingServiceClient],
 })
 export class AppModule {}
