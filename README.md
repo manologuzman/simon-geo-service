@@ -9,6 +9,48 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
+# Microservicio de auditoría
+
+El microservicio de Geolocalización :
+
+Este servicio forma parte de una arquitectura de microservicios para un sistema de monitoreo y control de flotas, y actúa servicio de geolocalización.
+
+Está construido con NestJS.
+
+## Características
+
+- Recibe datos GPS (HTTP POST) y los almacena en Redis (TTL: 5 minutos). 
+- Implementar un mecanismo de duplicación para evitar registros duplicados si un vehículo envía la misma coordenada múltiples veces. 
+- Validación de datos mediante DTOs y class-validator.
+- Swagger API Documentation.
+- Persistencia en PostgreSQL usando Prisma ORM.
+
+## Requisitos
+
+- Node.js (v16 o superior)
+- npm
+- Docker y Docker Compose (para la versión containerizada)
+
+## Variables de entorno
+
+Crear un archivo `.env` en la raíz del proyecto con las siguientes variables:
+
+```
+REDIS_HOST=redis
+REDIS_PORT=6379
+REDIS_TTL_SECONDS=300
+PORT=3001
+ROUTING_SERVICE_URL=http://routing-service:3002
+AUDIT_SERVICE_URL=http://audit-service:3003
+
+```
+
+## Download the repository
+
+```bash
+$
+```
+
 ## Project setup
 
 ```bash
@@ -28,55 +70,59 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-## Run tests
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
 ## Deployment
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+## Endpoints
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### Audit Alerts
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+```
+POST /geo
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+**Parámetros de consulta:**
 
-## Resources
+```bash
+{
+    "deviceId": "AZD-223",
+    "origin": {
+        "lat": 5.5225,
+        "lng": 8.2225
+    },
+    "destination": {
+        "lat": 4.1225,
+        "lng": 10.1225
+    }
+}
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+**Respuesta:**
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```bash
 
-## Support
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## Documentación API
 
-## Stay in touch
+La documentación de la API está disponible en Swagger UI:
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+http://localhost:3001/api/docs
 
-## License
+La documentación de la API está disponible en CompoDoc UI:
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+http://localhost:3001/docs/
+
+Incluye:
+
+Tags por módulo (Alert)
+Ejemplos de payloads
+
+## Pruebas
+
+```bash
+# Ejecutar pruebas unitarias
+npm run test
+
+# Ejecutar pruebas con cobertura
+npm run test:cov
+```
