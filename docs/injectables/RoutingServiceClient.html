@@ -364,14 +364,13 @@ export class RoutingServiceClient {
   }) {
     try {
       const response &#x3D; await this.httpService.axiosRef.post(
-        &#x60;${this.baseUrl}/routing&#x60;,
+        &#x60;${this.baseUrl}/route&#x60;,
         payload,
       );
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return response.data;
-    } catch (err) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      throw new Error(&#x60;Routing service error: ${err.message}&#x60;);
+    } catch (e) {
+      const errorMessage &#x3D; e instanceof Error ? e.message : &#x27;Error desconocido&#x27;;
+      throw new Error(&#x60;Routing service error: ${errorMessage}&#x60;);
     }
   }
 }

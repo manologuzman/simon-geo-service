@@ -110,7 +110,6 @@
 <p>Crear un archivo <code>.env</code> en la raíz del proyecto con las siguientes variables:</p>
 <b>Example :</b><div><pre class="line-numbers"><code class="language-none">REDIS_HOST=redis
 REDIS_PORT=6379
-REDIS_TTL_SECONDS=300
 PORT=3001
 ROUTING_SERVICE_URL=http://routing-service:3002
 AUDIT_SERVICE_URL=http://audit-service:3003
@@ -139,7 +138,31 @@ $ npm run start:prod</code></pre></div><h2>Deployment</h2>
         &quot;lng&quot;: 10.1225
     }
 }</code></pre></div><p><strong>Respuesta:</strong></p>
-<b>Example :</b><div><pre class="line-numbers"><code class="language-bash"></code></pre></div><h2>Documentación API</h2>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-bash">{
+    &quot;status&quot;: &quot;success&quot;,
+    &quot;data&quot;: {
+        &quot;saved&quot;: true,
+        &quot;route&quot;: {
+            &quot;deviceId&quot;: &quot;GaD-223&quot;,
+            &quot;origin&quot;: {
+                &quot;lat&quot;: 55.5225,
+                &quot;lng&quot;: 85.2225
+            },
+            &quot;destination&quot;: {
+                &quot;lat&quot;: 22.1225,
+                &quot;lng&quot;: 49.1225
+            },
+            &quot;route&quot;: [
+                {
+                    &quot;lat&quot;: 38.8225,
+                    &quot;lng&quot;: 67.1725
+                }
+            ],
+            &quot;status&quot;: &quot;success&quot;,
+            &quot;cacheTTL&quot;: 300
+        }
+    }
+}</code></pre></div><h2>Documentación API</h2>
 <p>La documentación de la API está disponible en Swagger UI:</p>
 <p><a href="http://localhost:3001/api/docs">http://localhost:3001/api/docs</a></p>
 <p>La documentación de la API está disponible en CompoDoc UI:</p>

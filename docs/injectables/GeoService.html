@@ -186,7 +186,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="11" class="link-to-prism">src/geo/geo.service.ts:11</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/geo/geo.service.ts:35</a></div>
                             </td>
                         </tr>
 
@@ -287,8 +287,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="23"
-                                    class="link-to-prism">src/geo/geo.service.ts:23</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="47"
+                                    class="link-to-prism">src/geo/geo.service.ts:47</a></div>
                         </td>
                     </tr>
 
@@ -357,8 +357,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="70"
-                                    class="link-to-prism">src/geo/geo.service.ts:70</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="97"
+                                    class="link-to-prism">src/geo/geo.service.ts:97</a></div>
                         </td>
                     </tr>
 
@@ -466,7 +466,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="11" class="link-to-prism">src/geo/geo.service.ts:11</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/geo/geo.service.ts:35</a></div>
                         </td>
                     </tr>
 
@@ -493,7 +493,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="10" class="link-to-prism">src/geo/geo.service.ts:10</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/geo/geo.service.ts:34</a></div>
                         </td>
                     </tr>
 
@@ -513,6 +513,30 @@ import { HttpService } from &#x27;@nestjs/axios&#x27;;
 import { ConfigService } from &#x27;@nestjs/config&#x27;;
 import { RoutingServiceClient } from &#x27;src/common/http/routing.service&#x27;;
 
+export interface RoutingResonceZ {
+  deviceId: string;
+  origin: Origin;
+  destination: Destination;
+  route: Route[];
+  status: string;
+  cacheTTL: number;
+}
+
+interface Origin {
+  lat: number;
+  lng: number;
+}
+
+interface Destination {
+  lat: number;
+  lng: number;
+}
+
+interface Route {
+  lat: number;
+  lng: number;
+}
+
 @Injectable()
 export class GeoService {
   private ttl: number;
@@ -529,7 +553,7 @@ export class GeoService {
   }
 
   async processGps(dto: LocationDto): Promise&lt;any&gt; {
-    const key &#x3D; &#x60;gps:${dto.deviceId}&#x60;;
+    const key &#x3D; &#x60;gps:${dto.deviceId}-${dto.origin.lat}-${dto.origin.lng}&#x60;;
     const exists &#x3D; await this.redisService.getClient().get(key);
 
     if (exists) {
@@ -555,11 +579,14 @@ export class GeoService {
 
     let routeResult;
     try {
-      routeResult &#x3D; await this.routingClient.calculateRoute(dto);
-    } catch (err) {
+      routeResult &#x3D; (await this.routingClient.calculateRoute(
+        dto,
+      )) as unknown as RoutingResonceZ;
+    } catch (e) {
+      const errorMessage &#x3D; e instanceof Error ? e.message : &#x27;Error desconocido&#x27;;
       await this.registerAlert(
         &#x27;routing-error&#x27;,
-        &#x60;Error al calcular ruta: ${err.message}&#x60;,
+        &#x60;Error al calcular ruta: ${errorMessage}&#x60;,
         &#x27;geo-service&#x27;,
         dto.deviceId,
       );
@@ -588,8 +615,9 @@ export class GeoService {
         source,
         deviceId,
       });
-    } catch (err) {
-      console.error(&#x27;Error al registrar alerta:&#x27;, err.message);
+    } catch (e) {
+      const errorMessage &#x3D; e instanceof Error ? e.message : &#x27;Error desconocido&#x27;;
+      console.error(&#x27;Error al registrar alerta:&#x27;, errorMessage);
     }
   }
 }
