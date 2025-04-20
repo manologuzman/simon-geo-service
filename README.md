@@ -99,7 +99,31 @@ POST /geo
 **Respuesta:**
 
 ```bash
-
+{
+    "status": "success",
+    "data": {
+        "saved": true,
+        "route": {
+            "deviceId": "GaD-223",
+            "origin": {
+                "lat": 55.5225,
+                "lng": 85.2225
+            },
+            "destination": {
+                "lat": 22.1225,
+                "lng": 49.1225
+            },
+            "route": [
+                {
+                    "lat": 38.8225,
+                    "lng": 67.1725
+                }
+            ],
+            "status": "success",
+            "cacheTTL": 300
+        }
+    }
+}
 ```
 
 ## Documentación API

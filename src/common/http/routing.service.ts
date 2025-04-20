@@ -20,14 +20,13 @@ export class RoutingServiceClient {
   }) {
     try {
       const response = await this.httpService.axiosRef.post(
-        `${this.baseUrl}/routing`,
+        `${this.baseUrl}/route`,
         payload,
       );
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return response.data;
-    } catch (err) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      throw new Error(`Routing service error: ${err.message}`);
+    } catch (e) {
+      const errorMessage = e instanceof Error ? e.message : 'Error desconocido';
+      throw new Error(`Routing service error: ${errorMessage}`);
     }
   }
 }

@@ -5,6 +5,30 @@ import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { RoutingServiceClient } from 'src/common/http/routing.service';
 
+export interface RoutingResonceZ {
+  deviceId: string;
+  origin: Origin;
+  destination: Destination;
+  route: Route[];
+  status: string;
+  cacheTTL: number;
+}
+
+interface Origin {
+  lat: number;
+  lng: number;
+}
+
+interface Destination {
+  lat: number;
+  lng: number;
+}
+
+interface Route {
+  lat: number;
+  lng: number;
+}
+
 @Injectable()
 export class GeoService {
   private ttl: number;
@@ -21,7 +45,7 @@ export class GeoService {
   }
 
   async processGps(dto: LocationDto): Promise<any> {
-    const key = `gps:${dto.deviceId}`;
+    const key = `gps:${dto.deviceId}-${dto.origin.lat}-${dto.origin.lng}`;
     const exists = await this.redisService.getClient().get(key);
 
     if (exists) {
@@ -47,11 +71,14 @@ export class GeoService {
 
     let routeResult;
     try {
-      routeResult = await this.routingClient.calculateRoute(dto);
-    } catch (err) {
+      routeResult = (await this.routingClient.calculateRoute(
+        dto,
+      )) as unknown as RoutingResonceZ;
+    } catch (e) {
+      const errorMessage = e instanceof Error ? e.message : 'Error desconocido';
       await this.registerAlert(
         'routing-error',
-        `Error al calcular ruta: ${err.message}`,
+        `Error al calcular ruta: ${errorMessage}`,
         'geo-service',
         dto.deviceId,
       );
@@ -80,8 +107,9 @@ export class GeoService {
         source,
         deviceId,
       });
-    } catch (err) {
-      console.error('Error al registrar alerta:', err.message);
+    } catch (e) {
+      const errorMessage = e instanceof Error ? e.message : 'Error desconocido';
+      console.error('Error al registrar alerta:', errorMessage);
     }
   }
 }
