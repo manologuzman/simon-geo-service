@@ -1,7 +1,10 @@
-name: Geo Service CI
+name: CI
+
 on:
   push:
-    branches: ["main"]
+    branches:
+      - main
+  pull_request:
 
 jobs:
   build:
@@ -16,3 +19,20 @@ jobs:
       - run: npm run lint
       - run: npm run test -- --coverage
       - run: npm run build
+
+      - name: Cache SonarScanner CLI
+        uses: actions/cache@v4
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar-scanner
+      
+      - name: Run SonarQube analysis
+        uses: SonarSource/sonarqube-scan-action@master
+        with:
+          args: >
+            -Dsonar.projectKey=manologuzman_simon-geo-service
+            -Dsonar.organization=manologuzman
+            -Dsonar.host.url=https://sonarcloud.io
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
