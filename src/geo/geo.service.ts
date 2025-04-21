@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { LocationDto } from './location.dto';
-import { RedisService } from 'src/redis/redis.service';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
-import { RoutingServiceClient } from 'src/common/http/routing.service';
+import { RedisService } from '../redis/redis.service';
+import { RoutingServiceClient } from '../common/http/routing.service';
 
 export interface RoutingResonceZ {
   deviceId: string;
@@ -89,6 +89,7 @@ export class GeoService {
       status: 'success',
       data: {
         saved: true,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         route: routeResult,
       },
     };
