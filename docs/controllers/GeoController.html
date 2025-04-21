@@ -266,6 +266,7 @@ export class GeoController {
   })
   @ApiResponse({ status: 400, description: &#x27;Datos inválidos.&#x27; })
   async handleGPSData(@Body() dto: LocationDto) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return await this.geoService.processGps(dto);
   }
 }
