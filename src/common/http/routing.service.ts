@@ -23,6 +23,7 @@ export class RoutingServiceClient {
         `${this.baseUrl}/route`,
         payload,
       );
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return response.data;
     } catch (e) {
       const errorMessage = e instanceof Error ? e.message : 'Error desconocido';
